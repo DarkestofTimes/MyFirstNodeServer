@@ -1,11 +1,36 @@
-import http from "http";
 import path from "path";
 import fs from "fs";
 import url from "node:url";
+import express from "express";
+const app = express();
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const server = http.createServer((req, res) => {
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.get("/about", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "about.html"));
+});
+
+app.get("/404", (req, res) => {
+  res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
+});
+
+app.get("*", (req, res) => {
+  res.redirect("/404");
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT);
+
+/* const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); */
+
+/* const server = http.createServer((req, res) => {
   let filePath = path.join(
     __dirname,
     "public",
@@ -43,3 +68,4 @@ const server = http.createServer((req, res) => {
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => console.log("port:", PORT));
+ */
